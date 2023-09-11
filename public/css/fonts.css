@@ -1,0 +1,35 @@
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.overlay {
+    background-color: #ff000000;
+    color: white;
+}
+
+.log {
+    font-family: "Andale Mono", "Courier New", monospace;
+    font-size: 40px;
+    width: auto;
+    height: auto;
+    padding: 20px;
+}
+
+.logwrapper {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+}
+
+.warning {
+    font-family: "Andale Mono", "Courier New", monospace;
+    font-size: 30px;
+    width: auto;
+    height: auto;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+}
