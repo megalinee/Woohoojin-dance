@@ -1,23 +1,8 @@
 {
-  "dependencies": {
-    "three": "^0.156.1"
-  },
   "devDependencies": {
     "vite": "^4.4.9"
   },
-  "name": "woohoojin-dance",
-  "version": "1.0.0",
-  "main": "main.js",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "repository": {
-    "type": "git",
-    "url": "woohoojin-dance"
-  },
-  "author": "megaline",
-  "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "three": "^0.156.1"
+  }
 }
