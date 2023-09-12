@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // banana settings
-let yOffset = 4;
 let jumpDistance = 1;
 let bananaSpeed = 2
 let bananaRotationYOffset = 1.2; // radians
@@ -24,7 +23,7 @@ document.body.appendChild(renderer.domElement);
 camera.position.z = 10;
 
 
-const light = new THREE.AmbientLight("0xffffff", .5)
+const light = new THREE.AmbientLight("0xffffff", .8)
 scene.add(light);
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 scene.add(directionalLight);
@@ -79,9 +78,8 @@ const loader = new GLTFLoader();
 
 let banana = null;
 
-loader.load('assets/BANAAN.glb', function (bananaGLTF) {
+loader.load('assets/NEWBANAAN.glb', function (bananaGLTF) {
     banana = bananaGLTF.scene
-    banana.position.y = -4
     banana.rotation.y = bananaRotationYOffset
     scene.add(banana);
 })
@@ -127,7 +125,7 @@ function animate() {
 
     if (banana) {
         banana.rotation.y = gradualChange((Math.sin(Clock.getElapsedTime()) * .1) * (sound.isPlaying ? 1 : .2) + bananaRotationYOffset, banana.rotation.y, .005)
-        banana.position.y = gradualChange((Math.sin(Clock.getElapsedTime() * bananaSpeed) * jumpDistance) * (sound.isPlaying ? .75 : .2) - yOffset, banana.position.y, .01);
+        banana.position.y = gradualChange((Math.sin(Clock.getElapsedTime() * bananaSpeed) * jumpDistance) * (sound.isPlaying ? .75 : .2), banana.position.y, .01);
     }
 
     books.forEach((book) => {
