@@ -9,6 +9,8 @@ let bookCount = 1;
 let bookRotationRadius = 4;
 let bookYOffset = -1;
 let backgroundColor = "#ff8833"
+let BPM = 108
+let period = (2 * Math.PI) / (240 / BPM)
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -41,17 +43,51 @@ const sound = new THREE.PositionalAudio(listener);
 const analyser = new THREE.AudioAnalyser(sound);
 const audioLoader = new THREE.AudioLoader();
 
+const musicClock = new THREE.Clock();
+musicClock.stop()
+let musicClockDelta = 0;
+
+function pauseMusic() {
+    if (sound.isPlaying) {
+        document.getElementById('start').innerHTML = 'PAUSED'
+        sound.pause();
+        musicClock.getElapsedTime()
+    } else {
+        let oldtime = musicClock.oldTime
+        if (document.getElementById('start').innerHTML === 'CLICK TO PLAY MUSIC') {
+            musicClock.start()
+            oldtime = 0;
+        }
+        document.getElementById('start').innerHTML = ''
+        sound.play();
+        console.log(oldtime)
+        musicClockDelta += musicClock.getDelta()
+    }
+}
+
+function getMusicElapsedTime() {
+    if (!sound.isPlaying) return musicClock.oldTime
+    return musicClock.getElapsedTime() - musicClockDelta
+}
+
 document.getElementById('start').innerHTML = 'LOADING MUSIC...'
 audioLoader.load(hoojsong, function (buffer) {
     sound.setBuffer(buffer);
     sound.setRefDistance(50);
     sound.setLoop(false);
     sound.setVolume(0.5);
-    sound.setLoop(true);
+    sound.setLoop(false);
+    musicClock.start()
+    sound.onEnded = function () {
+        sound.stop()
+        sound.play()
+        musicClockDelta = 0
+        musicClock.start()
+    }
     document.getElementById('start').innerHTML = 'CLICK TO PLAY MUSIC'
     jQuery("#start").on('click tap touchstart', function () {
         console.log('Playback resumed successfully');
-        sound.play();
+        pauseMusic()
         document.getElementById('start').innerHTML = ''
     });
 
@@ -62,13 +98,7 @@ document.addEventListener("keydown", onDocumentKeyDown, false);
 function onDocumentKeyDown(event) {
     let keyCode = event.which;
     if (keyCode == 32) {
-        if (sound.isPlaying) {
-            document.getElementById('start').innerHTML = 'PAUSED'
-            sound.pause();
-        } else {
-            document.getElementById('start').innerHTML = ''
-            sound.play();
-        }
+        pauseMusic()
     }
 }
 
@@ -105,12 +135,15 @@ for (let i = 0; i < bookCount; i++) {
 }
 
 const Clock = new THREE.Clock();
+
+
 let bgColor = 0;
 
 let addedClockTime = 0;
 
 function animate() {
     requestAnimationFrame(animate);
+
     let dataArray = analyser.getFrequencyData();
 
     let freqAvg = avg(dataArray);
@@ -125,6 +158,7 @@ function animate() {
 
     if (banana) {
         banana.rotation.y = gradualChange((Math.sin(Clock.getElapsedTime()) * .1) * (sound.isPlaying ? 1 : .2) + bananaRotationYOffset, banana.rotation.y, .005)
+        banana.rotation.x = gradualChange(sound.isPlaying ? (Math.sin(getMusicElapsedTime() * period)) * .2 : 0, banana.rotation.x, .01);
         banana.position.y = gradualChange((Math.sin(Clock.getElapsedTime() * bananaSpeed) * jumpDistance) * (sound.isPlaying ? .75 : .2), banana.position.y, .01);
     }
 
