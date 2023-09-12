@@ -109,6 +109,8 @@ for (let i = 0; i < bookCount; i++) {
 const Clock = new THREE.Clock();
 let bgColor = 0;
 
+let addedClockTime = 0;
+
 function animate() {
     requestAnimationFrame(animate);
     let dataArray = analyser.getFrequencyData();
@@ -121,6 +123,8 @@ function animate() {
     let lowerFreqMin = min(upperHalfArray);
     let higherFreqMin = min(lowerHalfArray);
 
+    addedClockTime += higherFreqMin;
+
     if (banana) {
         banana.rotation.y = gradualChange((Math.sin(Clock.getElapsedTime()) * .1) * (sound.isPlaying ? 1 : .2) + bananaRotationYOffset, banana.rotation.y, .005)
         banana.position.y = gradualChange((Math.sin(Clock.getElapsedTime() * bananaSpeed) * jumpDistance) * (sound.isPlaying ? .75 : .2) - yOffset, banana.position.y, .01);
@@ -129,11 +133,12 @@ function animate() {
     books.forEach((book) => {
         //book.position.x = Math.sin(Clock.getElapsedTime()) * 10
         book.rotation.y += 0.005 * (sound.isPlaying ? .75 : .2)
-        let targetYPos = (Math.sin(Clock.getElapsedTime()) * higherFreqMin * .5)
-        book.position.y = gradualChange((Math.abs(targetYPos) > .2 ? targetYPos : 0) + bookYOffset, book.position.y, .05)
+        let targetYPos = (Math.sin(Clock.getElapsedTime() + addedClockTime * .001) * .5) * (sound.isPlaying ? 1 : .2)
+        book.rotation.z = gradualChange(targetYPos, book.rotation.z, .01)
+        book.position.y = gradualChange(Math.sin(Clock.getElapsedTime()) * (sound.isPlaying ? 1 : .2) + bookYOffset, book.position.y, .05)
     })
 
-    pivotPoint.rotation.y += .001;
+    pivotPoint.rotation.y += .001 * (sound.isPlaying ? 1 : .2);
 
 
     bgColor = gradualChange((freqAvg / 255) * 2, bgColor, .001)
