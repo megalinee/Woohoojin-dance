@@ -33,7 +33,7 @@ directionalLight.position.y = camera.position.y;
 directionalLight.position.z = camera.position.z;
 
 // audio
-const hoojsong = '/music/hoojmusic.mp3'
+const hoojsong = 'music/hoojmusic.mp3'
 
 const listener = new THREE.AudioListener();
 camera.add(listener);
