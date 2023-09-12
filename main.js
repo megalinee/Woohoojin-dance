@@ -8,7 +8,7 @@ let bananaRotationYOffset = 1.2; // radians
 let bookCount = 1;
 let bookRotationRadius = 4;
 let bookYOffset = -1;
-let backgroundColor = "blue"
+let backgroundColor = "#ff8833"
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
